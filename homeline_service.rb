@@ -14,7 +14,7 @@ redis = Redis.new
 begin
   q.subscribe(:block => true) do |delivery_info, properties, body| 
     # body is the string sent by producer.
-    puts "something get"
+    redis.incr "a"
   end
 rescue Interrupt => _
   puts "Interrupt "
