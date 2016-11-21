@@ -1,1 +1,1 @@
-urgentworker: ruby homeline_service.rb
+worker: ruby homeline_service.rb
