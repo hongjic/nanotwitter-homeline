@@ -14,12 +14,12 @@ class HomeLineUpdate
   end
 
   # user_id = the action user
-  # timeline = timeline of the followed user [tweet.create_time, tweet.id]
+  # timeline = timeline of the followed user (tweet.id)
   def add_follow params
     user_id = params["user_id"]
     timeline = params["timeline"]
     redis_key = "user:#{user_id}:homeline"
-    @redis.zadd redis_key, timeline if @redis.exists redis_key
+    @redis.sadd redis_key, timeline if @redis.exists redis_key
     puts "add_follow:   #{params}"
   end
 
@@ -29,18 +29,18 @@ class HomeLineUpdate
     user_id = params["user_id"]
     timeline = params["timeline"]
     redis_key = "user:#{user_id}:homeline"
-    @redis.zrem "user:#{user_id}:homeline", timeline if @redis.exists redis_key
+    @redis.srem "user:#{user_id}:homeline", timeline if @redis.exists redis_key
     puts "delete_follow:   #{params}"
   end
 
   # follower_list = a list of user id
-  # tweet = [tweet.create_time, tweet.id]
+  # tweetid = (tweet_id)
   def create_new_tweet params
     userid_list = params["userid_list"]
-    tweet = params["tweet"]
+    tweetid = params["tweetid"]
     userid_list.each do |user_id|
       redis_key = "user:#{user_id}:homeline"
-      @redis.zadd redis_key, tweet[0], tweet[1] if @redis.exists redis_key
+      @redis.sadd redis_key, tweetid if @redis.exists redis_key
     end
     puts "create_new_tweet:   #{params}"
   end
