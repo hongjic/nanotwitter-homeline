@@ -1,1 +1,1 @@
-worker: ruby homeline_service.rb
+worker: ruby consumer.rb
