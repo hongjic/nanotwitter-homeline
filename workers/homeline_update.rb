@@ -34,15 +34,28 @@ class HomeLineUpdate
   end
 
   # follower_list = a list of user id
-  # tweetid = (tweet_id)
+  # tweet = (tweet json obj)
   def create_new_tweet params
-    userid_list = params["userid_list"]
-    tweetid = params["tweetid"]
-    userid_list.each do |user_id|
-      redis_key = "user:#{user_id}:homeline"
-      @redis.sadd redis_key, tweetid if @redis.exists redis_key
-    end
+    update_user_homeline params["userid_list"], params["tweet"]["tweet_id"]
+    update_global_homeline params["tweet"]
+
     puts "create_new_tweet:   #{params}"
   end
+
+  private 
+    def update_user_homeline userid_list, tweetid
+      userid_list.each do |user_id|
+        redis_key = "user:#{user_id}:homeline"
+        @redis.sadd redis_key, tweetid if @redis.exists redis_key
+      end
+    end
+
+    def update_global_homeline tweet
+      global = @redis.get "global:homeline"
+      global_tweets = []
+      global_tweets = JSON.parse global if global != nil
+      global_tweets.unshift tweet
+      @redis.set "global:homeline", global_tweets.to_json
+    end
 
 end
