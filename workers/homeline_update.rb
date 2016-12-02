@@ -36,7 +36,7 @@ class HomeLineUpdate
   # follower_list = a list of user id
   # tweet = (tweet json obj)
   def create_new_tweet params
-    update_user_homeline params["userid_list"], params["tweet"]["tweet_id"]
+    update_user_homeline params["userid_list"], params["tweet"]["id"]
     update_global_homeline params["tweet"]
 
     puts "create_new_tweet:   #{params}"
