@@ -55,7 +55,7 @@ class HomeLineUpdate
       global_tweets = []
       global_tweets = JSON.parse global if global != nil
       global_tweets.unshift tweet
-      global_tweets.pop if global_tweets > 50
+      global_tweets.pop if global_tweets.size > 50
       @redis.set "global:homeline", global_tweets.to_json
     end
 
